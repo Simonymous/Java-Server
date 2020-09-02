@@ -1,0 +1,5 @@
+package model;
+
+public enum TramsportObjectType {
+    TEST, AUTHENTICATE, AUTHENTICATERESPONSE, GENERALRESPONSE, REGISTERREQUEST
+}
