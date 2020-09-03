@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AuthenticatedUserList {
@@ -15,6 +16,12 @@ public class AuthenticatedUserList {
 
     public UserModel getUser(String key) {
         return authenticatedUserList.get(key);
+    }
+
+    public ArrayList<UserModel> getAuthenticatedUsers() {
+        ArrayList<UserModel> users = new ArrayList<>();
+        authenticatedUserList.forEach((s, userModel) -> users.add(userModel));
+        return users;
     }
 
     public static AuthenticatedUserList getInstance() {

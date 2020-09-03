@@ -7,6 +7,7 @@ import model.UserModel;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.ConnectException;
 import java.util.Scanner;
 
 public class Client {
@@ -27,6 +28,7 @@ public class Client {
                 System.out.print("1.) Test Anfrage\n");
                 System.out.print("2.) Authentifizierung\n");
                 System.out.print("3.) Registrierung\n");
+                System.out.print("4.) Ist 11 eine Primzahl?\n");
                 System.out.print("0.) Programm beenden.\n");
 
                 choice = input.nextInt();
@@ -39,6 +41,8 @@ public class Client {
                     case 2: authenticate();
                         break;
                     case 3: register();
+                        break;
+                    case 4: isPrime();
                         break;
                     default: System.out.println("Fehler: <"+choice+"> steht nicht zur Option!" );
                         break;
@@ -86,9 +90,20 @@ public class Client {
         }
     }
 
+    static void isPrime() throws IOException {
+        if (!key.equals("")) {
+            TransportObject<Integer> outputObject = new TransportObject<Integer>(TramsportObjectType.ISPRIMEREQUEST, 11,key);
+
+            schreibeNachricht(outputObject);
+        } else {
+            System.out.println("Sie müssen sich zuerst authentifizieren :");
+            authenticate();
+        }
+    }
+
     static void test()  throws  IOException {
         if (!key.equals("")) {
-            TransportObject<String> outputObject = new TransportObject<>(TramsportObjectType.TEST, key);
+            TransportObject<String> outputObject = new TransportObject<>(TramsportObjectType.TEST, "Hello Server!",key);
 
             schreibeNachricht(outputObject);
         } else {
@@ -109,11 +124,11 @@ public class Client {
         String json = schreibeNachricht(outputObject);
     }
 
-    static String schreibeNachricht(Object obj) throws  IOException{
+    static String schreibeNachricht(Object obj){
         String answer = null;
-        java.net.Socket socket = new java.net.Socket(ip,port); // verbindet sich mit Server
+        java.net.Socket socket = null;
         try {
-
+            socket = new java.net.Socket(ip,port); // verbindet sich mit Server
             System.out.println("[LOG] Nachricht wird geparsed: "+obj.toString());
             OutputStream out = socket.getOutputStream();
             PrintStream ps = new PrintStream(out, true);

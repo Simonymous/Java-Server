@@ -7,7 +7,9 @@ import model.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
+import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -21,8 +23,8 @@ public class RunnableWorker implements Runnable{
     }
 
     public void run() {
-        long time = System.currentTimeMillis();
-        System.out.println("[LOG] "+this.workerName+": Thread wird bearbeitet... Time: "+time);
+        Date startTime = new Date(System.currentTimeMillis());
+        System.out.println("[LOG] ["+startTime+"] "+this.workerName+": Thread wird bearbeitet...");
         try {
 
             InputStream input = clientSocket.getInputStream();
@@ -47,7 +49,9 @@ public class RunnableWorker implements Runnable{
             output.close();
             input.close();
             //clientSocket.close();
-            System.out.println("[LOG] "+this.workerName+": Request erfolgreich bearbeitet... Time: " + time);
+            Date endTime = new Date(System.currentTimeMillis());
+            long totaltime = endTime.getTime()-startTime.getTime();
+            System.out.println("[LOG] ["+endTime+"] "+this.workerName+": Request erfolgreich bearbeitet...  Dauer: "+totaltime+"ms");
         } catch (IOException e) {
             //Fehler!!
             e.printStackTrace();
@@ -66,6 +70,33 @@ public class RunnableWorker implements Runnable{
                                break;
             case REGISTERREQUEST: returnObj = register(content);
                                   break;
+            case ISPRIMEREQUEST: returnObj = isPrime(content);
+                                 break;
+        }
+        return returnObj;
+    }
+
+    private TransportObject<String> isPrime(String content) {
+        TransportObject<String> returnObj = new TransportObject<String>(TramsportObjectType.GENERALRESPONSE, "");
+        Gson gson = new Gson();
+        Type type = new TypeToken<TransportObject<Integer>>(){}.getType();
+        TransportObject<Integer> to = gson.fromJson(content,type);
+        String token = to.token;
+        System.out.println("[LOG] Test Request received with token : "+token);
+
+        AuthenticatedUserList authenticatedUserList = AuthenticatedUserList.getInstance();
+        if (authenticatedUserList.getUser(token)!=null) {
+            System.out.println("[LOG] Token ok!");
+            PrimeHelper ph = new PrimeHelper();
+            if (ph.isPrime(to.object)) {
+                returnObj.object = to.object+" is prime!";
+            } else {
+                returnObj.object = to.object+" is no prime!";
+            }
+
+        } else {
+            System.out.println("[LOG] Token invalid!");
+            returnObj.object = "Invalid Key!";
         }
         return returnObj;
     }
@@ -109,8 +140,8 @@ public class RunnableWorker implements Runnable{
         Gson gson = new Gson();
         Type type = new TypeToken<TransportObject<String>>(){}.getType();
         TransportObject<String> to = gson.fromJson(content,type);
-        String token = (String) to.object;
-        System.out.println("[LOG] Test Request received with token : "+token);
+        String token = to.token;
+        System.out.println("[LOG] Test Request received with message: '"+to.object+"' and token: '"+token+"'");
 
         AuthenticatedUserList authenticatedUserList = AuthenticatedUserList.getInstance();
         if (authenticatedUserList.getUser(token)!=null) {
