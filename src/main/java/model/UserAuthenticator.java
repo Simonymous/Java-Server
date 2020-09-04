@@ -30,9 +30,7 @@ public class UserAuthenticator {
         String name = (String) jsonUser.get("name");
         String password = (String) jsonUser.get("password");
 
-        UserModel user = new UserModel();
-        user.setName(name);
-        user.setPassword(password);
+        UserModel user = new UserModel(name, password);
         userList.add(user);
     }
 

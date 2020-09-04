@@ -1,5 +1,5 @@
 package model;
 
-public enum TramsportObjectType {
+public enum TransportObjectType {
     TEST, AUTHENTICATE, AUTHENTICATERESPONSE, GENERALRESPONSE, REGISTERREQUEST, ISPRIMEREQUEST
 }

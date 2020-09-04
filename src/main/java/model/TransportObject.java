@@ -1,16 +1,16 @@
 package model;
 
 public class TransportObject<O>  {
-  public TramsportObjectType type;
+  public TransportObjectType type;
   public O object;
   public String token;
 
-    public TransportObject(TramsportObjectType type, O obj) {
+    public TransportObject(TransportObjectType type, O obj) {
         this.type = type;
         this.object = obj;
         this.token = "";
     }
-  public TransportObject(TramsportObjectType type, O obj, String token) {
+  public TransportObject(TransportObjectType type, O obj, String token) {
       this.type = type;
       this.object = obj;
       this.token = token;

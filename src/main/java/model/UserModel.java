@@ -4,6 +4,11 @@ public class UserModel  {
     String name;
     String password;
 
+    public UserModel(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

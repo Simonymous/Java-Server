@@ -1,13 +1,12 @@
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import model.TramsportObjectType;
+import model.TransportObjectType;
 import model.TransportObject;
 import model.UserModel;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.ConnectException;
 import java.util.Scanner;
 
 public class Client {
@@ -28,7 +27,7 @@ public class Client {
                 System.out.print("1.) Test Anfrage\n");
                 System.out.print("2.) Authentifizierung\n");
                 System.out.print("3.) Registrierung\n");
-                System.out.print("4.) Ist 11 eine Primzahl?\n");
+                System.out.print("4.) Primzahl überprüfen?\n");
                 System.out.print("0.) Programm beenden.\n");
 
                 choice = input.nextInt();
@@ -64,11 +63,9 @@ public class Client {
         String pw = scanner.next();
         System.out.println("Nutzer '" + name + "' wird registriert...");
 
-        UserModel usr = new UserModel();
-        usr.setName(name);
-        usr.setPassword(pw);
+        UserModel usr = new UserModel(name, pw);
 
-        TransportObject<UserModel> outputObject = new TransportObject<>(TramsportObjectType.REGISTERREQUEST, usr);
+        TransportObject<UserModel> outputObject = new TransportObject<>(TransportObjectType.REGISTERREQUEST, usr);
 
         schreibeNachricht(outputObject);
 
@@ -92,7 +89,16 @@ public class Client {
 
     static void isPrime() throws IOException {
         if (!key.equals("")) {
-            TransportObject<Integer> outputObject = new TransportObject<Integer>(TramsportObjectType.ISPRIMEREQUEST, 11,key);
+            System.out.println("<Primzahl-Check>");
+            System.out.print("Zahl: ");
+            Scanner scanner = new Scanner(System.in);
+            int number;
+            while(!scanner.hasNextInt()) {
+                System.out.println("Das ist keine valide Zahl! Neue Zahl:");
+                scanner.next();
+            }
+            number = scanner.nextInt();
+            TransportObject<Integer> outputObject = new TransportObject<Integer>(TransportObjectType.ISPRIMEREQUEST, number,key);
 
             schreibeNachricht(outputObject);
         } else {
@@ -103,7 +109,7 @@ public class Client {
 
     static void test()  throws  IOException {
         if (!key.equals("")) {
-            TransportObject<String> outputObject = new TransportObject<>(TramsportObjectType.TEST, "Hello Server!",key);
+            TransportObject<String> outputObject = new TransportObject<>(TransportObjectType.TEST, "Hello Server!",key);
 
             schreibeNachricht(outputObject);
         } else {
@@ -116,11 +122,9 @@ public class Client {
 
     static void authenticate(String name, String password) throws IOException{
 
-        UserModel usr = new UserModel();
-        usr.setName(name);
-        usr.setPassword(password);
+        UserModel usr = new UserModel(name,password);
 
-        TransportObject<UserModel> outputObject = new TransportObject<>(TramsportObjectType.AUTHENTICATE, usr);
+        TransportObject<UserModel> outputObject = new TransportObject<>(TransportObjectType.AUTHENTICATE, usr);
         String json = schreibeNachricht(outputObject);
     }
 

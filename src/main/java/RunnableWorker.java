@@ -7,7 +7,6 @@ import model.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -77,7 +76,7 @@ public class RunnableWorker implements Runnable{
     }
 
     private TransportObject<String> isPrime(String content) {
-        TransportObject<String> returnObj = new TransportObject<String>(TramsportObjectType.GENERALRESPONSE, "");
+        TransportObject<String> returnObj = new TransportObject<String>(TransportObjectType.GENERALRESPONSE, "");
         Gson gson = new Gson();
         Type type = new TypeToken<TransportObject<Integer>>(){}.getType();
         TransportObject<Integer> to = gson.fromJson(content,type);
@@ -88,7 +87,7 @@ public class RunnableWorker implements Runnable{
         if (authenticatedUserList.getUser(token)!=null) {
             System.out.println("[LOG] Token ok!");
             PrimeHelper ph = new PrimeHelper();
-            if (ph.isPrime(to.object)) {
+            if (to.object != null && ph.isPrime(to.object)) {
                 returnObj.object = to.object+" is prime!";
             } else {
                 returnObj.object = to.object+" is no prime!";
@@ -102,7 +101,7 @@ public class RunnableWorker implements Runnable{
     }
 
     private TransportObject<String> register(String content) {
-        TransportObject<String> returnObj = new TransportObject<String>(TramsportObjectType.GENERALRESPONSE, "");
+        TransportObject<String> returnObj = new TransportObject<String>(TransportObjectType.GENERALRESPONSE, "");
         Gson gson = new Gson();
         Type type = new TypeToken<TransportObject<UserModel>>(){}.getType();
         TransportObject<UserModel> toUser = gson.fromJson(content,type);
@@ -136,7 +135,7 @@ public class RunnableWorker implements Runnable{
     }
 
     private TransportObject<String> test(String content) {
-        TransportObject<String> returnObj = new TransportObject<String>(TramsportObjectType.GENERALRESPONSE, "");
+        TransportObject<String> returnObj = new TransportObject<String>(TransportObjectType.GENERALRESPONSE, "");
         Gson gson = new Gson();
         Type type = new TypeToken<TransportObject<String>>(){}.getType();
         TransportObject<String> to = gson.fromJson(content,type);
@@ -155,7 +154,7 @@ public class RunnableWorker implements Runnable{
     }
 
     private TransportObject<String> authenticate(String content) {
-        TransportObject<String> returnObj = new TransportObject<String>(TramsportObjectType.AUTHENTICATERESPONSE, "");
+        TransportObject<String> returnObj = new TransportObject<String>(TransportObjectType.AUTHENTICATERESPONSE, "");
 
         Gson gson = new Gson();
         Type type = new TypeToken<TransportObject<UserModel>>(){}.getType();
