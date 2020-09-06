@@ -1,6 +1,3 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import com.google.gson.Gson;
 import model.TransportObject;
 import model.TransportObjectType;
@@ -11,7 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
-public class LoginTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+public class RegistrationTest {
 
     static private final Server server = new Server(9000);
 
@@ -21,17 +21,19 @@ public class LoginTest {
     }
 
     @Test
-    void testLoginSucces() throws IOException {
-        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin2","password"));
-        String token = (String) schreibeNachricht(to).object;
-        assertNotEquals("",token);
+    void registrationSuccess() {
+        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.REGISTERREQUEST, new UserModel("admin2","admin"));
+        String answer = (String)  schreibeNachricht(to).object;
+        assertEquals("REGISTERD!",answer);
+
+        //TODO: Call Login Test to verify correct registartion
     }
 
     @Test
-    void testLoginFailure() {
-        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin","password"));
-        String token = (String) schreibeNachricht(to).object;
-        assertEquals("",token);
+    void registrationDouble() {
+        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.REGISTERREQUEST, new UserModel("admin","admin"));
+        String answer = (String)  schreibeNachricht(to).object;
+        assertEquals("USER ALREADY EXISTS!",answer);
     }
 
     @AfterAll
@@ -58,7 +60,6 @@ public class LoginTest {
 
             BufferedReader br = new BufferedReader(in);
             answer = br.readLine();
-            //System.out.println("!!!!2"+answer);
             returnObject = gson.fromJson(answer, TransportObject.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,7 +72,6 @@ public class LoginTest {
 
         }
 
-        //System.out.println("!!!!!"+returnObject);
         return returnObject;
     }
 }

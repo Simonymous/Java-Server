@@ -1,6 +1,3 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import com.google.gson.Gson;
 import model.TransportObject;
 import model.TransportObjectType;
@@ -11,27 +8,34 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
-public class LoginTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+public class PrimeTest {
 
     static private final Server server = new Server(9000);
+
+    @Test
+    void primeRequest() {
+        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin","admin"));
+        String token = (String) schreibeNachricht(to).object;
+        TransportObject<Integer> to2 = new TransportObject<>(TransportObjectType.ISPRIMEREQUEST, 11, token);
+        String answer = (String) schreibeNachricht(to2).object;
+        assertEquals("11 is prime!",answer);
+    }
+
+    @Test
+    void noPrimeRequest() {
+        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin","admin"));
+        String token = (String) schreibeNachricht(to).object;
+        TransportObject<Integer> to2 = new TransportObject<>(TransportObjectType.ISPRIMEREQUEST, 9, token);
+        String answer = (String) schreibeNachricht(to2).object;
+        assertEquals("9 is no prime!",answer);
+    }
 
     @BeforeAll
     static void startServer() {
         new Thread(server).start();
-    }
-
-    @Test
-    void testLoginSucces() throws IOException {
-        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin2","password"));
-        String token = (String) schreibeNachricht(to).object;
-        assertNotEquals("",token);
-    }
-
-    @Test
-    void testLoginFailure() {
-        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin","password"));
-        String token = (String) schreibeNachricht(to).object;
-        assertEquals("",token);
     }
 
     @AfterAll
