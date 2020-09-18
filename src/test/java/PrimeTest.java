@@ -33,6 +33,24 @@ public class PrimeTest {
         assertEquals("9 is no prime!",answer);
     }
 
+    @Test
+    void negativePrimeRequest() {
+        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin","admin"));
+        String token = (String) schreibeNachricht(to).object;
+        TransportObject<Integer> to2 = new TransportObject<>(TransportObjectType.ISPRIMEREQUEST, -9, token);
+        String answer = (String) schreibeNachricht(to2).object;
+        assertEquals("-9 is no prime!",answer);
+    }
+
+    @Test
+    void zeroPrimeRequest() {
+        TransportObject<UserModel> to = new TransportObject<>(TransportObjectType.AUTHENTICATE, new UserModel("admin","admin"));
+        String token = (String) schreibeNachricht(to).object;
+        TransportObject<Integer> to2 = new TransportObject<>(TransportObjectType.ISPRIMEREQUEST, 0, token);
+        String answer = (String) schreibeNachricht(to2).object;
+        assertEquals("0 is no prime!",answer);
+    }
+
     @BeforeAll
     static void startServer() {
         new Thread(server).start();

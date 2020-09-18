@@ -7,6 +7,12 @@ import java.util.Scanner;
 
 public class ServerRunner {
     static Server server;
+    static final int port = 9000;
+
+    /**
+     * Main Loop for User IO
+     * @param args
+     */
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
@@ -25,6 +31,9 @@ public class ServerRunner {
 
             choice = input.nextInt();
 
+            /**
+             * Parse User Input in loop and call functions
+             */
             switch (choice) {
                 case 0: stopServer();
                         System.exit(0);
@@ -45,27 +54,37 @@ public class ServerRunner {
 
     }
 
+    /**
+     * starts Server Thread
+     */
     private static void startServer() {
         if (server != null) {
             System.out.println("Server läuft bereits!!\n");
         } else {
-            server = new Server(9000);
+            server = new Server(port);
             System.out.println("Server "+server.toString()+" wird jetzt gestartet...");
             new Thread(server).start();
             System.out.println("Waiting for connections...");
         }
     }
 
+    /**
+     * Stops Server Thread
+     */
     private static void stopServer() {
         if(server != null && !server.isStopped) {
             System.out.println("Server "+server.toString()+" wird jetzt gestoppt...");
             server.stop();
+            server = null;
         } else {
             System.out.println("Es läuft kein Server!!\n");
         }
 
     }
 
+    /**
+     * Lists All Registerd Users (-> List Users from users.json)
+     */
     private static void listRegisteredUsers() {
         UserAuthenticator uA = new UserAuthenticator();
         ArrayList<UserModel> userList = uA.getUsers();
@@ -77,6 +96,9 @@ public class ServerRunner {
 
     }
 
+    /**
+     * Lists All Authenticated Users
+     */
     private static void listAuthenticatedUsers() {
         if (server != null) {
             AuthenticatedUserList authenticatedUserList = AuthenticatedUserList.getInstance();

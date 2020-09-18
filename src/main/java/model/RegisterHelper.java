@@ -8,14 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 public class RegisterHelper {
 
     public RegisterHelper() {
@@ -32,9 +24,10 @@ public class RegisterHelper {
             JSONArray usersJson = (JSONArray) obj;
 
             JSONObject userObject = new JSONObject();
-
-            userObject.put("name", name);
-            userObject.put("password", password);
+            JSONObject innerObject = new JSONObject();
+            innerObject.put("name", name);
+            innerObject.put("password", password);
+            userObject.put("user", innerObject);
 
             usersJson.add(userObject);
 

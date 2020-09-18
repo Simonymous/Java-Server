@@ -27,8 +27,10 @@ public class UserAuthenticator {
     }
 
     private static void parseUserObject(JSONObject jsonUser) {
-        String name = (String) jsonUser.get("name");
-        String password = (String) jsonUser.get("password");
+        JSONObject userObject = (JSONObject) jsonUser.get("user");
+        String name = (String) userObject.get("name");
+        String password = (String) userObject.get("password");
+
 
         UserModel user = new UserModel(name, password);
         userList.add(user);
@@ -39,16 +41,20 @@ public class UserAuthenticator {
     }
 
     private static void parseJsonData() {
+        userList.clear();
         JSONParser parser = new JSONParser();
         try {
             File file = new File(
                     UserAuthenticator.class.getClassLoader().getResource("users.json").getFile()
             );
-            Object obj = parser.parse(new FileReader(file));
+            if (file.length() > 0) {
+                Object obj = parser.parse(new FileReader(file));
 
-            JSONArray usersJson = (JSONArray) obj;
+                JSONArray usersJson = (JSONArray) obj;
 
-            usersJson.forEach( u -> parseUserObject((JSONObject) u));
+                usersJson.forEach( u -> parseUserObject((JSONObject) u));
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();

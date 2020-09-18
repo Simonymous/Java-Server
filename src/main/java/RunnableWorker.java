@@ -21,6 +21,9 @@ public class RunnableWorker implements Runnable{
         this.workerName   = serverText;
     }
 
+    /**
+     * Working - Section of the worker
+     */
     public void run() {
         Date startTime = new Date(System.currentTimeMillis());
         System.out.println("[LOG] ["+startTime+"] "+this.workerName+": Thread wird bearbeitet...");
@@ -57,24 +60,36 @@ public class RunnableWorker implements Runnable{
         }
     }
 
+    /**
+     * Parses An received Transport Object (json -> object)
+     * @param content json String
+     * @return TransportObject
+     */
     private TransportObject parseTransport(String content) {
         System.out.println("[LOG] Parsing: "+content);
         Gson gson = new Gson();
         TransportObject o = gson.fromJson(content, TransportObject.class);
         TransportObject returnObj = null;
-        switch (o.type) {
-            case TEST: returnObj = test(content);
-                       break;
-            case AUTHENTICATE: returnObj =  authenticate(content);
-                               break;
-            case REGISTERREQUEST: returnObj = register(content);
-                                  break;
-            case ISPRIMEREQUEST: returnObj = isPrime(content);
-                                 break;
+        if(o != null) {
+            switch (o.type) {
+                case TEST: returnObj = test(content);
+                    break;
+                case AUTHENTICATE: returnObj =  authenticate(content);
+                    break;
+                case REGISTERREQUEST: returnObj = register(content);
+                    break;
+                case ISPRIMEREQUEST: returnObj = isPrime(content);
+                    break;
+            }
         }
         return returnObj;
     }
 
+    /**
+     * Parses an prime request
+     * @param content
+     * @return
+     */
     private TransportObject<String> isPrime(String content) {
         TransportObject<String> returnObj = new TransportObject<String>(TransportObjectType.GENERALRESPONSE, "");
         Gson gson = new Gson();

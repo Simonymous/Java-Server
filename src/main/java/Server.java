@@ -14,6 +14,9 @@ public class Server implements Runnable{
         this.serverPort = port;
     }
 
+    /**
+     * run for Thread.run
+     */
     public void run() {
         synchronized (this) {
             this.runningThread = Thread.currentThread();
@@ -48,6 +51,9 @@ public class Server implements Runnable{
         return this.isStopped;
     }
 
+    /**
+     * Try to close the server socket and then stop
+     */
     public synchronized void stop(){
         this.isStopped = true;
         try {
@@ -57,6 +63,9 @@ public class Server implements Runnable{
         }
     }
 
+    /**
+     * Opens new Server Socket
+     */
     private void openServerSocket() {
         try {
             this.serverSocket = new ServerSocket(this.serverPort);

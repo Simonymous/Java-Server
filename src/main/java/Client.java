@@ -10,10 +10,14 @@ import java.lang.reflect.Type;
 import java.util.Scanner;
 
 public class Client {
-    static private String ip = "127.0.0.1"; // localhost
-    static private int port = 9000;
+    static final private String ip = "127.0.0.1"; // localhost
+    static final private int port = 9000;
     static private String key = "";
 
+    /**
+     * Main loop for Client IO
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             Scanner input = new Scanner(System.in);
@@ -32,6 +36,9 @@ public class Client {
 
                 choice = input.nextInt();
 
+                /**
+                 * Parse User Input Option
+                 */
                 switch (choice) {
                     case 0: System.exit(0);
                         break;
@@ -53,6 +60,10 @@ public class Client {
         }
     }
 
+    /**
+     * Parse Register Input and prepare it for sending
+     * @throws IOException
+     */
     static void register() throws IOException {
 
         System.out.println("<Registrierung>");
@@ -72,6 +83,10 @@ public class Client {
 
     }
 
+    /**
+     * Parse Authenticate Input and prepare it for sending
+     * @throws IOException
+     */
     static void authenticate()  throws  IOException {
         if (!key.equals("")) {
             System.out.println("Fehler: Sie sind bereits authentifiziert!");
@@ -86,7 +101,10 @@ public class Client {
             authenticate(name, pw);
         }
     }
-
+    /**
+     * Parse Prime Request Input and prepare it for sending
+     * @throws IOException
+     */
     static void isPrime() throws IOException {
         if (!key.equals("")) {
             System.out.println("<Primzahl-Check>");
@@ -107,6 +125,10 @@ public class Client {
         }
     }
 
+    /**
+     * Send a test Request
+     * @throws IOException
+     */
     static void test()  throws  IOException {
         if (!key.equals("")) {
             TransportObject<String> outputObject = new TransportObject<>(TransportObjectType.TEST, "Hello Server!",key);
@@ -120,6 +142,12 @@ public class Client {
 
     }
 
+    /**
+     * Build User Object for Authentication and send it
+     * @param name
+     * @param password
+     * @throws IOException
+     */
     static void authenticate(String name, String password) throws IOException{
 
         UserModel usr = new UserModel(name,password);
@@ -128,6 +156,12 @@ public class Client {
         String json = schreibeNachricht(outputObject);
     }
 
+
+    /**
+     * Sends any Object to server
+     * @param obj
+     * @return
+     */
     static String schreibeNachricht(Object obj){
         String answer = null;
         java.net.Socket socket = null;
@@ -168,6 +202,10 @@ public class Client {
         return answer;
     }
 
+    /**
+     * Parses Returned Answers To Objec
+     * @param content
+     */
     static private void parseTransport(String content) {
         Gson gson = new Gson();
         TransportObject o = gson.fromJson(content, TransportObject.class);
@@ -178,6 +216,10 @@ public class Client {
         }
     }
 
+    /**
+     * Parses An Authenticate-Response
+     * @param content
+     */
     static private void parseCode(String content) {
         Gson gson = new Gson();
         Type type = new TypeToken<TransportObject<String>>(){}.getType();
