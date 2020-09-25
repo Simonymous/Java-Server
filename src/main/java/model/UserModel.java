@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Model für Nutzerdaten
+ */
 public class UserModel  {
     String name;
     String password;

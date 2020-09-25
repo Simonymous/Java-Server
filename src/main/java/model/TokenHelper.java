@@ -10,6 +10,10 @@ public class TokenHelper {
 
     }
 
+    /**
+     * Generiert ein Token
+     * @return token
+     */
     public String generateToken() {
         try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
@@ -23,6 +27,12 @@ public class TokenHelper {
         }
     }
 
+    /**
+     * Wird nicht verwendet -> Kann Token validieren
+     * Token wird dafür in AuthenticatedUserList gespeichert
+     * @param token
+     * @return
+     */
     public String validateToken(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);

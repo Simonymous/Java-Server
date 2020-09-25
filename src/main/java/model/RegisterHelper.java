@@ -13,6 +13,12 @@ public class RegisterHelper {
     public RegisterHelper() {
     }
 
+    /**
+     * Fügt Nutzer in Json ein
+     * @param name
+     * @param password
+     * @return
+     */
     public String registerUser(String name, String password) {
         JSONParser parser = new JSONParser();
         try {

@@ -22,7 +22,7 @@ public class RunnableWorker implements Runnable{
     }
 
     /**
-     * Working - Section of the worker
+     * Working - Section vom Worker
      */
     public void run() {
         Date startTime = new Date(System.currentTimeMillis());
